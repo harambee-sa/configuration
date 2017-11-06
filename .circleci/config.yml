@@ -22,6 +22,52 @@ jobs:
       - run:
           name: update configuration on development
           command: 'DEV_SEC_GROUP=$DEV_SEC_GROUP /bin/bash .circleci/deploy.sh development'
+          
+  deploy_staging:
+    machine:
+        enabled: true
+    working_directory: ~/configuration
+    parallelism: 1
+    steps:
+      - checkout
+      - run:
+          name: apt-get update
+          command: 'sudo apt-get update'
+      - run:
+           name: apt-get install python
+           command: 'sudo apt-get install python-dev --fix-missing'
+      - run:
+          name: pip install awscli
+          command: 'pip install awscli'
+      - run:
+          name: set region
+          command: 'aws configure set default.region eu-west-1'
+      - run:
+          name: update configuration on staging
+          command: 'STAGING_SEC_GROUP=$STAGING_SEC_GROUP /bin/bash .circleci/deploy.sh staging'
+
+  deploy_production:
+    machine:
+        enabled: true
+    working_directory: ~/configuration
+    parallelism: 1
+    steps:
+      - checkout
+      - run:
+          name: apt-get update
+          command: 'sudo apt-get update'
+      - run:
+           name: apt-get install python
+           command: 'sudo apt-get install python-dev --fix-missing'
+      - run:
+          name: pip install awscli
+          command: 'pip install awscli'
+      - run:
+          name: set region
+          command: 'aws configure set default.region eu-west-1'
+      - run:
+          name: update configuration on staging
+          command: 'PRODUCTION_SEC_GROUP=$PRODUCTION_SEC_GROUP /bin/bash .circleci/deploy.sh production'
 
 workflows:
   version: 2
@@ -31,3 +77,11 @@ workflows:
           filters:
             branches:
               only: proversity/development
+      - deploy_staging:
+          filters:
+            branches:
+              only: proversity/staging
+      - deploy_production:
+          filters:
+            branches:
+              only: proversity/production
