@@ -60,3 +60,15 @@
   become_user: "{{ supervisor_service_user }}"
   tags:
     - assets
+    
+- name: start {{ item }} services (-e 'assets_stop=true')
+  supervisorctl:
+    name: "{{ item }}"
+    supervisorctl_path: "{{ supervisor_ctl }}"
+    config: "{{ supervisor_cfg }}"
+    state: started
+  when: assets_stop is defined and assets_stop|bool
+  with_items: "{{ supervisor_services_list }}"
+  become_user: "{{ supervisor_service_user }}"
+  tags:
+    - assets
