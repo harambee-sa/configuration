@@ -94,7 +94,7 @@ edx_notes_api_environment:
   PATH: "{{ edx_notes_api_venv_dir }}/bin:{{ ansible_env.PATH }}"
 
 edx_notes_api_service_name: edx_notes_api
-edx_notes_api_user: "{{ edx_notes_api_service_name }}"
+edx_notes_api_user: "edx_notes_api"
 edx_notes_api_home: "{{ COMMON_APP_DIR }}/{{ edx_notes_api_service_name }}"
 edx_notes_api_code_dir: "{{ edx_notes_api_home }}/{{ edx_notes_api_service_name }}"
 edx_notes_api_conf_dir: "{{ edx_notes_api_home }}"

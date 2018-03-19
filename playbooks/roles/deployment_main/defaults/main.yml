@@ -1,0 +1,5 @@
+---
+
+deployment_repo_dest: '/edx/var/deployment'
+deployment_repo_url: 'git@github.com:proversity-org/edx-deployment.git'
+deployment_version: 'proversity/development'

@@ -1,0 +1,6 @@
+- name: Update Deployment
+  hosts: all
+  become: True
+  gather_facts: True
+  roles:
+   - deployment_main

@@ -4,7 +4,6 @@
     path: "{{ EDXAPP_MICROSITE_CONFIG_FILE }}"
   register: microsite_config_file
   ignore_errors: yes
-  when: "{{ EDXAPP_MICROSITE_CONFIG_FILE is defined }}"
   tags:
     - install
     - install:configuration
@@ -16,7 +15,7 @@
     dest: "{{ EDXAPP_MICROSITE_CONFIG_FILE }}"
     headers: "Authorization: {{ EDXAPP_MICROSITE_SECRET }}"
     mode: 0777
-  when: "{{ EDXAPP_MICROSITE_CONFIG_FILE is defined }} and {{ microsite_config_file.stat.exists == False }}"
+  when: microsite_config_file.stat.exists == False
   ignore_errors: yes
   register: microsite_config_file_downloaded
   tags:
@@ -27,7 +26,7 @@
 - name: Include {{ EDXAPP_MICROSITE_CONFIG_FILE }} dinamically
   include_vars:
     file: "{{ EDXAPP_MICROSITE_CONFIG_FILE }}"
-  when: "{{ EDXAPP_MICROSITE_CONFIG_FILE is defined }} and {{ microsite_config_file.stat.exists == True }} or {{ microsite_config_file_downloaded.changed == True }}"
+  when: microsite_config_file.stat.exists == True or microsite_config_file_downloaded.changed == True
   tags:
     - install
     - install:configuration

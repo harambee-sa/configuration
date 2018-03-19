@@ -1,0 +1,13 @@
+---
+
+# Role to update the edx-deployment repo
+
+- name: checkout edx-deployment repo into {{ deployment_repo_dest }} (-e 'edxapp_git_ssh_key=/path/)
+  git:
+    dest: "{{ deployment_repo_dest }}"
+    repo: "{{ deployment_repo_url }}"
+    version: "{{ deployment_version }}"
+    key_file: "{{ edxapp_git_ssh_key }}"
+    accept_hostkey: yes
+  when: (deployment_repo_url != '' and (edxapp_git_ssh_key is defined and edxapp_git_ssh_key != ''))
+    

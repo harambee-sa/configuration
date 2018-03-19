@@ -13,7 +13,9 @@ IFS=","
             -h        this
 
     <repo> - must be one of edx-platform, edx-workers, xqueue, cs_comments_service, credentials, xserver, configuration,
-    read-only-certificate-code, edx-analytics-data-api, edx-ora2, insights, ecommerce, course_discovery, notifier, edx-notes-api, microsites
+
+    read-only-certificate-code, edx-analytics-data-api, edx-ora2, insights, ecommerce, course_discovery,
+    notifier, video_web_frontend, video_delivery_worker, veda_pipeline_worker, video_encode_worker
     <version> - can be a commit or tag
 	when <repo> == microsites, the 3rd argument must be the path to or the actual ssh key locked to the repo
 
@@ -47,6 +49,11 @@ extra_args="$extra_args -e 'disable_edx_services=true' -e devstack=true"
 declare -A repos_to_cmd
 edx_ansible_cmd="{{ edx_ansible_venv_bin }}/ansible-playbook -i localhost, -c local $extra_args"
 
+asset_stop='false'
+if [[ "$4" == "asset_stop" ]]; then
+    asset_stop='true'
+fi
+
 repos_to_cmd["edx-platform"]="$edx_ansible_cmd edxapp.yml -e 'edx_platform_version=$2'"
 repos_to_cmd["edx-workers"]="$edx_ansible_cmd edxapp.yml -e 'edx_platform_version=$2' -e 'celery_worker=true'"
 repos_to_cmd["xqueue"]="$edx_ansible_cmd xqueue.yml -e 'xqueue_version=$2' -e 'elb_pre_post=false'"
@@ -61,9 +68,13 @@ repos_to_cmd["insights"]="$edx_ansible_cmd insights.yml -e 'INSIGHTS_VERSION=$2'
 repos_to_cmd["ecommerce"]="$edx_ansible_cmd ecommerce.yml -e 'ECOMMERCE_VERSION=$2'"
 repos_to_cmd["discovery"]="$edx_ansible_cmd discovery.yml -e 'DISCOVERY_VERSION=$2'"
 repos_to_cmd["notifier"]="$edx_ansible_cmd notifier.yml -e 'NOTIFIER_VERSION=$2'"
+repos_to_cmd["video_web_frontend"]="$edx_ansible_cmd veda_web_frontend.yml -e 'VEDA_WEB_FRONTEND_VERSION=$2'"
+repos_to_cmd["video_delivery_worker"]="$edx_ansible_cmd veda_delivery_worker.yml -e 'VEDA_DELIVERY_WORKER_VERSION=$2'"
+repos_to_cmd["veda_pipeline_worker"]="$edx_ansible_cmd veda_pipeline_worker.yml -e 'VEDA_PIPELINE_WORKER_VERSION=$2'"
+repos_to_cmd["video_encode_worker"]="$edx_ansible_cmd veda_encode_worker.yml -e 'VEDA_ENCODE_WORKER_VERSION=$2'"
 repos_to_cmd["edx-notes-api"]="$edx_ansible_cmd notes.yml -e 'EDX_NOTES_API_VERSION=$2'"
-repos_to_cmd["microsites"]="$edx_ansible_cmd microsites.yml -e 'microsite_version=$2' -e 'edxapp_git_ssh_key=$3'"
-repos_to_cmd["themes"]="$edx_ansible_cmd themes.yml -e 'edxapp_theme_version=$2' -e 'edxapp_git_ssh_key=$3'"
+repos_to_cmd["microsites"]="$edx_ansible_cmd microsites.yml -e 'microsite_version=$2' -e 'edxapp_git_ssh_key=$3' -e 'assets_stop=$asset_stop'"
+repos_to_cmd["themes"]="$edx_ansible_cmd themes.yml -e 'edxapp_theme_version=$2' -e 'edxapp_git_ssh_key=$3' -e 'assets_stop=$asset_stop'"
 
 if [[ -z $1 || -z $2 ]]; then
     echo

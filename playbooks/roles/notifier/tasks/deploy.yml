@@ -85,6 +85,9 @@
   tags:
   - deploy
 
+- name: Migrate the notifier db
+  shell: "{{ NOTIFIER_VENV_DIR }}/bin/python manage.py migrate --fake-initial"
+
 - name: Syncdb
   shell: "{{ NOTIFIER_VENV_DIR }}/bin/python manage.py syncdb"
   args:

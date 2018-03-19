@@ -8,6 +8,7 @@ docker_plays_paths:
 weights:
   - discovery: 6
   - go-agent: 3
+  - go-agent-marketing: 4
   - xqwatcher: 3
   - analytics_api: 1
   - edxapp: 28
@@ -28,3 +29,4 @@ weights:
   - ecomworker: 4
   - notes: 2
   - notifier: 2
+  - mongo: 1

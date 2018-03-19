@@ -43,3 +43,6 @@
     - install:app-configuration
     - microsites
     - edxapp_cfg # Old deprecated tag, will remove when possible
+    
+- set_fact:
+    edxapp_installed: true
