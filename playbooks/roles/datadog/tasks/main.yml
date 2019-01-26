@@ -21,11 +21,25 @@
   tags:
     - datadog
 
-- name: Add apt key for datadog
+- name: Remove expired apt key
   apt_key:
     id: "C7A7DA52"
-    url: "{{ COMMON_UBUNTU_APT_KEYSERVER }}{{ datadog_apt_key }}"
+    keyserver: "keyserver.ubuntu.com"
+    state: absent
+  tags:
+    - datadog
+
+- name: Add apt key for datadog
+  apt_key:
+    id: "{{ datadog_apt_key }}"
+    keyserver: "keyserver.ubuntu.com"
     state: present
+  tags:
+    - datadog
+
+- name: Apt update
+  apt:
+    update_cache: yes
   tags:
     - datadog
 
@@ -39,7 +53,7 @@
 
 - name: Install datadog agent
   apt:
-    name: "datadog-agent={{ datadog_agent_version }}"
+    name: "datadog-agent{{ '='~datadog_agent_version if datadog_agent_version != '' else '' }}"
   tags:
     - datadog
 
@@ -56,6 +70,26 @@
     dest: "/etc/dd-agent/datadog.conf"
     regexp: "^api_key:.*"
     line: "api_key:{{ DATADOG_API_KEY }}"
+  notify:
+    - restart the datadog service
+  tags:
+    - datadog
+
+- name: Update Hostname
+  lineinfile:
+    dest: "/etc/dd-agent/datadog.conf"
+    regexp: "^hostname:.*"
+    line: "hostname:{{ EDXAPP_SITE_NAME }}"
+  notify:
+    - restart the datadog service
+  tags:
+    - datadog
+
+- name: Update Tags
+  lineinfile:
+    dest: "/etc/dd-agent/datadog.conf"
+    regexp: "^tags:.*"
+    line: "tags: env:{{ DATADOG_ENV }}, role:{{ DATADOG_GROUP }}"
   notify:
     - restart the datadog service
   tags:

@@ -21,6 +21,16 @@
 #
 #
 
+- name: Update expired rabbitmq repo key
+  shell: "curl -L https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey | apt-key add -"
+  args:
+    warn: False
+
+- name: Update expired edX PPA repo key
+  shell: "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 69464050 ; apt-key update ; apt-get update"
+  args:
+    warn: False
+
 - name: Install ubuntu system packages
   apt:
     name: "{{ item }}"

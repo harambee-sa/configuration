@@ -1,9 +1,9 @@
 ---
 DATADOG_API_KEY: "SPECIFY_KEY_HERE"
 
-datadog_agent_version: '1:5.10.1-1'
+datadog_agent_version: ''
 
-datadog_apt_key: "0x226AE980C7A7DA52"
+datadog_apt_key: "A2923DFF56EDA6E76E55E492D3A80E30382E94DE"
 datadog_debian_pkgs:
   - apparmor-utils
   - build-essential
@@ -13,3 +13,6 @@ datadog_debian_pkgs:
   - ipython
   - pkg-config
   - rsyslog
+
+DATADOG_ENV: 'unknown'
+DATADOG_GROUP: 'unknown'
