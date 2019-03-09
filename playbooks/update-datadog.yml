@@ -7,4 +7,3 @@
   gather_facts: True
   roles:
     - role: datadog
-      when: COMMON_ENABLE_DATADOG

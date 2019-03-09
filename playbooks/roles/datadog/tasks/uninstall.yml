@@ -1,0 +1,67 @@
+---
+#
+# datadog
+#
+# Overview:
+#
+# Installs datadog
+##
+# Dependencies:
+#
+# Example play:
+#   roles:
+#   - common
+#   - datadog
+#
+- name: Ensure stopped and disabled
+  service:
+    name: datadog-agent
+    state: stopped
+    enabled: no
+  ignore_errors: true
+  tags:
+    - datadog
+
+- name: Uninstall datadog agent
+  apt:
+    name: "datadog-agent"
+    state: absent
+  tags:
+    - datadog
+
+- name: Remove expired apt key
+  apt_key:
+    id: "C7A7DA52"
+    keyserver: "keyserver.ubuntu.com"
+    state: absent
+  tags:
+    - datadog
+
+- name: Remove apt key for datadog
+  apt_key:
+    id: "{{ datadog_apt_key }}"
+    keyserver: "keyserver.ubuntu.com"
+    state: absent
+  tags:
+    - datadog
+
+- name: Remove config
+  file:
+    path: "/etc/dd-agent/datadog.conf"
+    state: absent
+  tags:
+    - datadog
+
+- name: Remove apt repository for datadog
+  apt_repository:
+    repo: 'deb http://apt.datadoghq.com/ stable main'
+    state: absent
+    update_cache: yes
+  tags:
+    - datadog
+
+- name: Apt update
+  apt:
+    update_cache: yes
+  tags:
+    - datadog
