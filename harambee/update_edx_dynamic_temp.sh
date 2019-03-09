@@ -1,7 +1,7 @@
 #! /bin/bash
 
 PLAYBOOK="update-edx.yml"
-EXTRA_VARS="~/configuration/server-vars.yml"
+EXTRA_VARS="~/server-vars-uat.yml"
 TAG="tag_Name_harambee_uat_rg_edx*"
 sshkey="~/.ssh/priv"
 

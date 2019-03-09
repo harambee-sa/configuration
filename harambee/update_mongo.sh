@@ -1,7 +1,7 @@
 #! /bin/bash
 
 PLAYBOOK="update-mongo.yml"
-EXTRA_VARS="~/configuration/server-vars.yml"
+EXTRA_VARS="~/server-vars-uat.yml"
 INVENTORY="~/configuration/harambee/inventory-harambee-uat.ini"
 
 . ~/venv/bin/activate
