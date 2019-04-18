@@ -119,6 +119,7 @@
   cron:
     name: "log-queue-lenghts"
     job: /usr/bin/timeout {{ rabbitmq_cron_timeout }} {{ rabbitmq_app_dir }}/log-rabbitmq-queues.sh >/dev/null 2>&1
+    minute: "*/15"
   tags:
     - "install"
     - "install:app-configuration"
@@ -128,6 +129,7 @@
   cron:
     name: "log-rabbitmq-memory-usage"
     job: /usr/bin/timeout {{ rabbitmq_cron_timeout }} {{ rabbitmq_app_dir }}/log-rabbitmq-memory.sh >/dev/null 2>&1
+    minute: "*/15"
   tags:
     - "install"
     - "install:app-configuration"
@@ -325,6 +327,26 @@
 
 - name: Set cluster name
   command: "/usr/sbin/rabbitmqctl set_cluster_name  {{ RABBITMQ_CLUSTER_NAME }}"
+  tags:
+    - "install"
+    - "install:app-configuration"
+
+- name: Add rabbitmq status check and restart script
+  template:
+    src: "check_rabbitmq.sh"
+    dest: "/root/check_rabbitmq.sh"
+    owner: root
+    group: root
+    mode: "0755"
+  tags:
+    - "install"
+    - "install:app-configuration"
+
+- name: Set up a cron job to run status check and restart script
+  cron:
+    name: "check_rabbitmq"
+    job: "/root/check_rabbitmq.sh"
+    minute: "*/5"
   tags:
     - "install"
     - "install:app-configuration"
